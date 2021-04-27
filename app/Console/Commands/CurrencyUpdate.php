@@ -31,14 +31,19 @@ class CurrencyUpdate extends Command
         $json = json_encode($xml->Currencies, JSON_THROW_ON_ERROR);
         $rates = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
 
-        foreach ($rates['Currency'] as $rate) {
-            $currency = Currency::where('name', $rate['ID'])->first();
-            if (empty($currency)) {
-                $currency = new Currency(['name' => $rate['ID']]);
+        $this->withProgressBar(
+            $rates['Currency'],
+            function ($rate) {
+                $currency = Currency::where('name', $rate['ID'])->first();
+                if (empty($currency)) {
+                    $currency = new Currency(['name' => $rate['ID']]);
+                }
+                $currency->rate = (float)$rate['Rate'] * 100_000;
+                $currency->save();
             }
-            $currency->rate = (float)$rate['Rate'] * 100_000;
-            $currency->save();
-        }
+        );
+
+        $this->newLine();
 
         return 0;
     }
