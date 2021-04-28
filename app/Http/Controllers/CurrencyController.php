@@ -11,8 +11,10 @@ class CurrencyController extends Controller
     {
         $rates = Currency::all();
         $result = session('result', 0);
+        $amount = session('amount', 0);
+        $currency = session('currency', 'EUR');
 
-        return view('converter', compact('rates', 'result'));
+        return view('converter', compact('rates', 'result', 'amount', 'currency'));
     }
 
     public function convert(Request $request)
@@ -21,8 +23,9 @@ class CurrencyController extends Controller
         $amount = $request->get('amount');
 
         $result = $amount * Currency::where('name', $currency)->first()->rate / 1000;
+        $amount *= \currency($currency)->getSubunit();
 
-        session(compact('result'));
+        session(compact('currency', 'amount', 'result'));
 
         return redirect('/');
     }

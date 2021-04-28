@@ -13,7 +13,6 @@
     <div class="flex justify-center mb-20">
         @include('icon')
     </div>
-    {{--    <h1 class="font-bold text-4xl text-center mt-4 mb-8">Converter</h1>--}}
     <div>
         <form action="/convert" method="post">
             <select name="currency" id="currency" class="form-select">
@@ -30,6 +29,9 @@
     </div>
     <div class="font-bold text-center mt-8">
         @if($result)
+            <div>{{ $currency }}/EUR</div>
+            @money($amount, $currency)
+            =
             @money($result, 'EUR')
         @endif
     </div>
