@@ -18,7 +18,7 @@
             <select name="currency" id="currency" class="form-select">
                 @foreach($rates as $rate)
                     <option value="{{ $rate->name }}">
-                        <div class="px-4">{{ currency($rate->name)->getSymbol() }}</div>
+                        <div class="px-4">{{ country_flag(substr($rate->name, 0, 2)) }}</div>
                         <div>{{ $rate->name }}</div>
                     </option>
                 @endforeach
