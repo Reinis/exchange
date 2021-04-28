@@ -22,8 +22,13 @@ class CurrencyController extends Controller
         $currency = $request->get('currency');
         $amount = $request->get('amount');
 
-        $result = $amount * Currency::where('name', $currency)->first()->rate / 1000;
         $amount *= \currency($currency)->getSubunit();
+        $result = money($amount, $currency)
+            ->convert(
+                \Akaunting\Money\Currency::EUR(),
+                100_000 / Currency::where('name', $currency)->first()->rate
+            )
+            ->getAmount(true);
 
         session(compact('currency', 'amount', 'result'));
 
